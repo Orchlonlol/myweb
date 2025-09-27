@@ -1,103 +1,94 @@
-import Image from "next/image";
+"use client";
+
+import { useState } from "react";
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.js
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("all");
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  const animals = [
+    { name: "Lion", image: "/image/lion.jpg", desc: "King of the jungle.", category: "wild" },
+    { name: "Tiger", image: "/image/tiger.jpg", desc: "Strong predator.", category: "wild" },
+    { name: "Zebra", image: "/image/zebra.webp", desc: "Striped horse-like animal.", category: "wild" },
+    { name: "Dog", image: "/image/dog.jpg", desc: "Loyal domestic animal.", category: "farm" },
+    { name: "Cat", image: "/image/cat.jpg", desc: "Independent pet.", category: "farm" },
+    { name: "Cow", image: "/image/cow.jpg", desc: "Provides milk.", category: "farm" },
+    { name: "Horse", image: "/image/horse.jpg", desc: "Used for riding.", category: "farm" },
+    { name: "Sheep", image: "/image/Sheep.webp", desc: "Provides wool.", category: "farm" },
+    { name: "Goat", image: "/image/goat.jpg", desc: "Climbs hills easily.", category: "farm" },
+    { name: "Eagle", image: "/image/eagle.jpg", desc: "Powerful bird of prey.", category: "birds" },
+    { name: "Parrot", image: "/image/parrot.jpg", desc: "Colorful and talkative bird.", category: "birds" },
+    { name: "Penguin", image: "/image/penguin.webp", desc: "Flightless bird.", category: "birds" },
+    { name: "Falcon", image: "/image/falcon.avif", desc: "Majestic raptor, very fast hunter.", category: "birds" },
+    { name: "Swan", image: "/image/swan.jpg", desc: "Elegant water bird with long neck.", category: "birds" },
+  ];
+
+  const filtered = animals.filter(a => {
+    const matchesCategory = category === "all" || a.category === category;
+    const matchesSearch = a.name.toLowerCase().includes(search.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
+
+  return (
+    <div>
+      <h2 style={{ textAlign: "center", marginBottom: 20 }}>Our Animals</h2>
+
+      {/* Category buttons */}
+      <div style={{ textAlign: "center", marginBottom: 15 }}>
+        {["all","wild","farm","birds"].map(cat => (
+          <button
+            key={cat}
+            onClick={() => setCategory(cat)}
+            style={{
+              margin: "0 5px",
+              padding: "8px 12px",
+              borderRadius: "6px",
+              border: "none",
+              cursor: "pointer",
+              background: category === cat ? "#4CAF50" : "#ccc",
+              color: category === cat ? "white" : "#111",
+            }}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+            {cat.charAt(0).toUpperCase() + cat.slice(1)}
+          </button>
+        ))}
+      </div>
+
+      {/* Search box */}
+      <div style={{ textAlign: "center", marginBottom: 20 }}>
+        <input
+          type="text"
+          placeholder="Search animals..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          style={{
+            padding: "10px 15px",
+            width: "250px",
+            borderRadius: "8px",
+            border: "1px solid #ccc",
+          }}
+        />
+      </div>
+
+      {/* Animal grid */}
+      <div className="grid">
+        {filtered.length > 0 ? (
+          filtered.map((a, idx) => (
+            <div key={idx} className="card">
+              <div className="card-image">
+                <img src={a.image} alt={a.name} />
+                <div className="overlay">
+                  <span className="tag">{a.category.toUpperCase()}</span>
+                  <h3>{a.name}</h3>
+                  <p>{a.desc}</p>
+                </div>
+              </div>
+            </div>
+          ))
+        ) : (
+          <p style={{ textAlign: "center", gridColumn: "1 / -1" }}>No animals found</p>
+        )}
+      </div>
     </div>
   );
 }
