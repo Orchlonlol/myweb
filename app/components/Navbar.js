@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+
+// Navbar component with links to Home and Animals pages
 export default function Navbar() {
   return (
     <nav className="navbar">
@@ -10,6 +12,7 @@ export default function Navbar() {
           <Link href="/">Animals</Link>
         </div>
       </div>
+      
     </nav>
   );
 }
