@@ -1,93 +1,73 @@
+// app/page.js
 "use client";
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Home() {
-  const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("all");
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [checking, setChecking] = useState(true);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const animals = [
-    { name: "Lion", image: "/image/lion.jpg", desc: "King of the jungle.", category: "wild" },
-    { name: "Tiger", image: "/image/tiger.jpg", desc: "Strong predator.", category: "wild" },
-    { name: "Zebra", image: "/image/zebra.webp", desc: "Striped horse-like animal.", category: "wild" },
-    { name: "Dog", image: "/image/dog.jpg", desc: "Loyal domestic animal.", category: "farm" },
-    { name: "Cat", image: "/image/cat.jpg", desc: "Independent pet.", category: "farm" },
-    { name: "Cow", image: "/image/cow.jpg", desc: "Provides milk.", category: "farm" },
-    { name: "Horse", image: "/image/horse.jpg", desc: "Used for riding.", category: "farm" },
-    { name: "Sheep", image: "/image/Sheep.webp", desc: "Provides wool.", category: "farm" },
-    { name: "Goat", image: "/image/goat.jpg", desc: "Climbs hills easily.", category: "farm" },
-    { name: "Eagle", image: "/image/eagle.jpg", desc: "Powerful bird of prey.", category: "birds" },
-    { name: "Parrot", image: "/image/parrot.jpg", desc: "Colorful and talkative bird.", category: "birds" },
-    { name: "Penguin", image: "/image/penguin.webp", desc: "Flightless bird.", category: "birds" },
-    { name: "Falcon", image: "/image/falcon.avif", desc: "Majestic raptor, very fast hunter.", category: "birds" },
-    { name: "Swan", image: "/image/swan.jpg", desc: "Elegant water bird with long neck.", category: "birds" },
-  ];
+  useEffect(() => {
+    const user = localStorage.getItem("animal_user");
+    if (user) setLoggedIn(true); // өмнө нь login хийсэн бол шууд Home
+    setChecking(false);
+  }, []);
 
-  const filtered = animals.filter(a => {
-    const matchesCategory = category === "all" || a.category === category;
-    const matchesSearch = a.name.toLowerCase().includes(search.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
+  const handleLogin = (e) => {
+    e.preventDefault();
+    if (!name || !email || !password) return;
+    localStorage.setItem("animal_user", JSON.stringify({ name, email }));
+    setLoggedIn(true);
+  };
 
+  const handleLogout = () => {
+    localStorage.removeItem("animal_user");
+    setLoggedIn(false);
+    setName(""); setEmail(""); setPassword("");
+  };
+
+  if (checking) return null; // localStorage шалгах зуур ямар ч зүйл гаргахгүй
+
+  if (!loggedIn) {
+    // 🔹 Анхны login form
+    return (
+      <div style={{ minHeight:"100vh", display:"flex", alignItems:"center", justifyContent:"center", background:"#f0f2f5" }}>
+        <form onSubmit={handleLogin} style={{ maxWidth:400, width:"100%", background:"white", padding:24, borderRadius:12, boxShadow:"0 6px 18px rgba(0,0,0,0.12)" }}>
+          <h2 style={{ textAlign:"center", marginBottom:20 }}>Login</h2>
+          <label>Name</label>
+          <input value={name} onChange={e=>setName(e.target.value)} placeholder="Name" style={{ width:"100%", padding:10, margin:"6px 0 12px", borderRadius:8, border:"1px solid #ccc" }} />
+          <label>Email</label>
+          <input value={email} onChange={e=>setEmail(e.target.value)} type="email" placeholder="Email" style={{ width:"100%", padding:10, margin:"6px 0 12px", borderRadius:8, border:"1px solid #ccc" }} />
+          <label>Password</label>
+          <input value={password} onChange={e=>setPassword(e.target.value)} type="password" placeholder="Password" style={{ width:"100%", padding:10, margin:"6px 0 18px", borderRadius:8, border:"1px solid #ccc" }} />
+          <button type="submit" style={{ width:"100%", padding:12, background:"#1E90FF", color:"white", border:"none", borderRadius:8, fontWeight:"bold", cursor:"pointer" }}>Login</button>
+        </form>
+      </div>
+    );
+  }
+
+  // 🔹 Login хийсний дараа Home page + Header
   return (
     <div>
-      <h2 style={{ textAlign: "center", marginBottom: 20 }}>Our Animals</h2>
+      {/* Header */}
+      <nav className="navbar" style={{ background:"#4CAF50", padding:"15px 0" }}>
+        <div className="nav-container" style={{ maxWidth:1000, margin:"auto", display:"flex", justifyContent:"space-between", alignItems:"center", padding:"0 15px" }}>
+          <span className="logo" style={{ color:"white", fontWeight:"bold" }}>Animal World</span>
+          <div className="nav-links">
+            <a href="/" style={{ color:"white", marginRight:10 }}>Home</a>
+            <a href="/animals" style={{ color:"white", marginRight:10 }}>Animals</a>
+            <button onClick={handleLogout} style={{ background:"#1E90FF", color:"white", border:"none", borderRadius:6, padding:"6px 12px", cursor:"pointer" }}>Logout</button>
+          </div>
+        </div>
+      </nav>
 
-      {/* Category buttons */}
-      <div style={{ textAlign: "center", marginBottom: 15 }}>
-        {["all","wild","farm","birds"].map(cat => (
-          <button
-            key={cat}
-            onClick={() => setCategory(cat)}
-            style={{
-              margin: "0 5px",
-              padding: "8px 12px",
-              borderRadius: "6px",
-              border: "none",
-              cursor: "pointer",
-              background: category === cat ? "#4CAF50" : "#ccc",
-              color: category === cat ? "white" : "#111",
-            }}
-          >
-            {cat.charAt(0).toUpperCase() + cat.slice(1)}
-          </button>
-        ))}
-      </div>
-
-      {/* Search box */}
-      <div style={{ textAlign: "center", marginBottom: 20 }}>
-        <input
-          type="text"
-          placeholder="Search animals..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          style={{
-            padding: "10px 15px",
-            width: "250px",
-            borderRadius: "8px",
-            border: "1px solid #ccc",
-          }}
-        />
-      </div>
-
-      {/* Animal grid */}
-      <div className="grid">
-        {filtered.length > 0 ? (
-          filtered.map((a, idx) => (
-            <div key={idx} className="card">
-              <div className="card-image">
-                <img src={a.image} alt={a.name} />
-                <div className="overlay">
-                  <span className="tag">{a.category.toUpperCase()}</span>
-                  <h3>{a.name}</h3>
-                  <p>{a.desc}</p>
-                </div>
-              </div>
-            </div>
-          ))
-        ) : (
-          <p style={{ textAlign: "center", gridColumn: "1 / -1" }}>No animals found</p>
-        )}
+      {/* Home content */}
+      <div style={{ textAlign:"center", marginTop:40 }}>
+        <h1 style={{ fontSize:32 }}>Welcome!</h1>
+        <p>Discover amazing animals from the wild, farms, and birds.</p>
+        <img src="/image/animal_banner.jpg" alt="Animals" style={{ width:"80%", maxWidth:700, borderRadius:12, boxShadow:"0 8px 24px rgba(0,0,0,0.12)", marginTop:20 }} />
       </div>
     </div>
   );

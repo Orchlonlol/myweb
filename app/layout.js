@@ -1,5 +1,5 @@
+// app/layout.js
 import './globals.css';
-import Navbar from './components/Navbar'; // << path зассан
 
 export const metadata = {
   title: "Animal World",
@@ -10,7 +10,6 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <Navbar />
         <main className="main">{children}</main>
         <footer className="footer">© 2025 Animal World</footer>
       </body>

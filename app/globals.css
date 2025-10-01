@@ -6,7 +6,7 @@ body {
 }
 
 .navbar {
-  background: #4CAF50;
+  background: #484948;
   color: white;
   padding: 15px 0;
 }
@@ -100,7 +100,7 @@ h2 {
 
 .tag {
   display: inline-block;
-  background: #4CAF50;
+  background: #393d39;
   color: white;
   font-size: 10px;
   font-weight: bold;
